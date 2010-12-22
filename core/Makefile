@@ -5047,6 +5047,7 @@ PATH=$(INTERNAL_USERIMAGES_BINARY_PATHS):$$PATH \
         --verbose \
          $(if $(SIGNING_KEYS), ,--extracted_input_target_files $(patsubst %.zip,%,$(BUILT_TARGET_FILES_PACKAGE))) \
         --path $(HOST_OUT) \
+        --backup=$(backuptool) \
         $(if $(OEM_OTA_CONFIG), --oem_settings $(OEM_OTA_CONFIG)) \
         $(2) \
 	$(if $(SIGNING_KEYS), $(BUILT_TARGET_FILES_PACKAGE_SIGNED), $(BUILT_TARGET_FILES_PACKAGE)) $(1)
@@ -5060,6 +5061,16 @@ name := $(name)-ota-$(FILE_NAME_TAG)
 
 INTERNAL_OTA_PACKAGE_TARGET := $(PRODUCT_OUT)/$(name).zip
 INTERNAL_OTA_METADATA := $(PRODUCT_OUT)/ota_metadata
+
+ifeq ($(TARGET_BUILD_VARIANT),user)
+    $(INTERNAL_OTA_PACKAGE_TARGET): backuptool := false
+else
+ifneq ($(BLISS_BUILD),)
+    $(INTERNAL_OTA_PACKAGE_TARGET): backuptool := true
+else
+    $(INTERNAL_OTA_PACKAGE_TARGET): backuptool := false
+endif
+endif
 
 $(INTERNAL_OTA_PACKAGE_TARGET): KEY_CERT_PAIR := $(DEFAULT_KEY_CERT_PAIR)
 $(INTERNAL_OTA_PACKAGE_TARGET): .KATI_IMPLICIT_OUTPUTS := $(INTERNAL_OTA_METADATA)
