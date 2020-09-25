@@ -37,7 +37,7 @@ Invoke ". build/envsetup.sh" from your shell to add the following functions to y
 
 EOF
 
-    __print_cesium_functions_help
+    __print_kowalski_functions_help
 
 cat <<EOF
 
@@ -50,7 +50,7 @@ EOF
     local T=$(gettop)
     local A=""
     local i
-    for i in `cat $T/build/envsetup.sh $T/vendor/cesium/build/envsetup.sh | sed -n "/^[[:blank:]]*function /s/function \([a-z_]*\).*/\1/p" | sort | uniq`; do
+    for i in `cat $T/build/envsetup.sh $T/vendor/kowalski/build/envsetup.sh | sed -n "/^[[:blank:]]*function /s/function \([a-z_]*\).*/\1/p" | sort | uniq`; do
       A="$A $i"
     done
     echo $A
@@ -61,8 +61,8 @@ function build_build_var_cache()
 {
     local T=$(gettop)
     # Grep out the variable names from the script.
-    cached_vars=(`cat $T/build/envsetup.sh $T/vendor/cesium/build/envsetup.sh | tr '()' '  ' | awk '{for(i=1;i<=NF;i++) if($i~/get_build_var/) print $(i+1)}' | sort -u | tr '\n' ' '`)
-    cached_abs_vars=(`cat $T/build/envsetup.sh $T/vendor/cesium/build/envsetup.sh | tr '()' '  ' | awk '{for(i=1;i<=NF;i++) if($i~/get_abs_build_var/) print $(i+1)}' | sort -u | tr '\n' ' '`)
+    cached_vars=(`cat $T/build/envsetup.sh $T/vendor/kowalski/build/envsetup.sh | tr '()' '  ' | awk '{for(i=1;i<=NF;i++) if($i~/get_build_var/) print $(i+1)}' | sort -u | tr '\n' ' '`)
+    cached_abs_vars=(`cat $T/build/envsetup.sh $T/vendor/kowalski/build/envsetup.sh | tr '()' '  ' | awk '{for(i=1;i<=NF;i++) if($i~/get_abs_build_var/) print $(i+1)}' | sort -u | tr '\n' ' '`)
     # Call the build system to dump the "<val>=<value>" pairs as a shell script.
     build_dicts_script=`\builtin cd $T; build/soong/soong_ui.bash --dumpvars-mode \
                         --vars="${cached_vars[*]}" \
@@ -144,8 +144,8 @@ function check_product()
         echo "Couldn't locate the top of the tree.  Try setting TOP." >&2
         return
     fi
-    if (echo -n $1 | grep -q -e "^cesium_") ; then
-        CUSTOM_BUILD=$(echo -n $1 | sed -e 's/^cesium_//g')
+    if (echo -n $1 | grep -q -e "^kowalski_") ; then
+        CUSTOM_BUILD=$(echo -n $1 | sed -e 's/^kowalski_//g')
     else
         CUSTOM_BUILD=
     fi
@@ -674,14 +674,14 @@ function lunch()
         T=$(gettop)
         C=$(pwd)
         cd $T
-        $T/vendor/cesium/build/tools/roomservice.py $product
+        $T/vendor/kowalski/build/tools/roomservice.py $product
         cd $C
         check_product $product
     else
         T=$(gettop)
         C=$(pwd)
         cd $T
-        $T/vendor/cesium/build/tools/roomservice.py $product true
+        $T/vendor/kowalski/build/tools/roomservice.py $product true
         cd $C
     fi
     if [ $? -ne 0 ]
@@ -1657,4 +1657,4 @@ fi
 
 export ANDROID_BUILD_TOP=$(gettop)
 
-. $ANDROID_BUILD_TOP/vendor/cesium/build/envsetup.sh
+. $ANDROID_BUILD_TOP/vendor/kowalski/build/envsetup.sh

@@ -295,7 +295,7 @@ FIND_LEAVES_EXCLUDES := $(addprefix --prune=, $(SCAN_EXCLUDE_DIRS) .repo .git)
 
 -include vendor/extra/BoardConfigExtra.mk
 ifneq ($(CUSTOM_BUILD),)
-include vendor/cesium/config/BoardConfig.mk
+include vendor/kowalski/config/BoardConfig.mk
 endif
 
 # General entries for project pathmap.  Any entries listed here should
@@ -1258,7 +1258,7 @@ DEFAULT_DATA_OUT_MODULES := ltp $(ltp_packages) $(kselftest_modules)
 ifneq ($(CUSTOM_BUILD),)
 ## We need to be sure the global selinux policies are included
 ## last, to avoid accidental resetting by device configs
-#$(eval include device/cesium/sepolicy/common/sepolicy.mk)
+#$(eval include device/kowalski/sepolicy/common/sepolicy.mk)
 endif
 
 # Include any vendor specific config.mk file
